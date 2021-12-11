@@ -49,7 +49,7 @@ var getWeather = function(){
             // set lat/long coordinates for forecast API
             lat = data.coord.lat;
             lon = data.coord.lon;
-            
+
         });
     });
 
@@ -70,13 +70,6 @@ var getForecastWeather = function(lat, lon){
         })
     })
 }
-
-// insert response values into appropriate html containers
-var populateResults = function(apiResponse){
-    humidityEl = apiResponse.main
-    console.log(humidityEl);
-}
-
 
 // event listeners
 searchButtonEl.addEventListener('click', getWeather);

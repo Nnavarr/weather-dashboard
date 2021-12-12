@@ -24,8 +24,15 @@ main {
 
 .forecast-days {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
 }
+
+.forecast {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 /* change display to column when <= 768px */
 @media screen and (max-width: 768px){
     main {

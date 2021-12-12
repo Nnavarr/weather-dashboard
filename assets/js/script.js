@@ -42,23 +42,21 @@ var getWeather = function(){
         response.json().then(function(data) {
             // update html containers to show data
             console.log(data);
-            var date = Date(data.dt * 1000);
+            var date = new Date(data.dt * 1000).toLocaleDateString('en-US');
             cityTitleEl.innerHTML = data.name + ' - ' + date;
-            tempEl.innerHTML = tempEl.innerHTML + data.main.temp;
-            windEl.innerHTML = windEl.innerHTML + data.wind.speed + ' MPH';
-            humidityEl.innerHTML = humidityEl.innerHTML + data.main.humidity + ' %';
+            tempEl.innerHTML = 'Temp: ' + data.main.temp;
+            windEl.innerHTML = 'Wind: ' + data.wind.speed + ' MPH';
+            humidityEl.innerHTML = 'Humidity: ' + data.main.humidity + ' %';
 
             // set lat/long coordinates for forecast API
             lat = data.coord.lat;
             lon = data.coord.lon;
-
         });
     });
 
     // 5 day forecast
     getForecastWeather(lat, lon);
     
-
 }
 
 // api call: 5 day forecast
@@ -71,20 +69,18 @@ var getForecastWeather = function(lat, lon){
     fetch(baseUrl).then(function(response){
         response.json().then(function(data) {
             console.log(data);
-            
             // update HTML elements with forecast info
             for (var i = 0; i < forecastEl.length; i++){
                 // position 0 = next day forecast
-                forecastEl[i].children[0].innerHTML = data.daily[i].temp.dt; // date
-                forecastEl[i].children[1].innerHTML = data.daily[i].temp.day;
-                forecastEl[i].children[2].innerHTML = data.daily[i].wind_speed + ' MPH';
-                forecastEl[i].children[3].innerHTML = data.daily[i].humidity + ' %';   
+                forecastEl[i].children[0].innerHTML = new Date(data.daily[i].dt * 1000).toLocaleDateString('en-US'); // date
+                forecastEl[i].children[1].src = `http://openweathermap.org/img/w/${data.daily[i].weather[0].icon}.png`
+                forecastEl[i].children[2].innerHTML = 'Day: ' + data.daily[i].temp.day;
+                forecastEl[i].children[3].innerHTML = 'Wind: ' + data.daily[i].wind_speed + ' MPH';
+                forecastEl[i].children[4].innerHTML = 'Humidity: ' + data.daily[i].humidity + ' %';   
             }
-
         })
     })
 }
 
 // event listeners
 searchButtonEl.addEventListener('click', getWeather);
-

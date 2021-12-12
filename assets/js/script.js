@@ -58,8 +58,6 @@ var getWeather = function(){
     // 5 day forecast
     getForecastWeather(lat, lon);
     
-    // 
-
 
 }
 
@@ -75,7 +73,6 @@ var getForecastWeather = function(lat, lon){
             console.log(data);
             
             // update HTML elements with forecast info
-
             for (var i = 0; i < forecastEl.length; i++){
                 // position 0 = next day forecast
                 forecastEl[i].children[0].innerHTML = data.daily[i].temp.dt; // date

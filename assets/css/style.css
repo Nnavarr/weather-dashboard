@@ -22,6 +22,10 @@ main {
     margin-left: 50px;
 }
 
+.forecast-days {
+    display: flex;
+    justify-content: space-between;
+}
 /* change display to column when <= 768px */
 @media screen and (max-width: 768px){
     main {

@@ -32,7 +32,7 @@ var getWeather = function(){
 
     var state = cityObj[cityName];
     var baseUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName},${state}&appid=${apiKey}&units=imperial`
-
+    
     // container for lat long coords
     var lat = 0;
     var lon = 0;
@@ -51,6 +51,24 @@ var getWeather = function(){
             // set lat/long coordinates for forecast API
             lat = data.coord.lat;
             lon = data.coord.lon;
+
+            // update search history 
+            var searchObj = {
+                [cityName]: {
+                    'lon': lon,
+                    'lat': lat
+                }
+            }
+
+            // check for presence of previous searches. If none, create object.
+            if (!searchHistory){
+                searchHistory = [];
+                searchHistory.push(searchObj);
+                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            } else {
+                searchHistory.push(searchObj);
+                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            }
         });
     });
 
@@ -84,3 +102,6 @@ var getForecastWeather = function(lat, lon){
 
 // event listeners
 searchButtonEl.addEventListener('click', getWeather);
+
+// import search history
+var searchHistory = JSON.parse(localStorage.getItem('searchHistory'));

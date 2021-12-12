@@ -13,6 +13,8 @@ var day3El = document.getElementById('day3');
 var day4El = document.getElementById('day4');
 var day5El = document.getElementById('day5');
 
+var forecastEl = [day1El, day2El, day3El, day4El, day5El];
+
 var apiKey = '504f46843e11dd1aa60312828047eb5b';
 var cityObj = {
     'phoneix': 'arizona',
@@ -55,6 +57,10 @@ var getWeather = function(){
 
     // 5 day forecast
     getForecastWeather(lat, lon);
+    
+    // 
+
+
 }
 
 // api call: 5 day forecast
@@ -67,6 +73,17 @@ var getForecastWeather = function(lat, lon){
     fetch(baseUrl).then(function(response){
         response.json().then(function(data) {
             console.log(data);
+            
+            // update HTML elements with forecast info
+
+            for (var i = 0; i < forecastEl.length; i++){
+                // position 0 = next day forecast
+                forecastEl[i].children[0].innerHTML = data.daily[i].temp.dt; // date
+                forecastEl[i].children[1].innerHTML = data.daily[i].temp.day;
+                forecastEl[i].children[2].innerHTML = data.daily[i].wind_speed + ' MPH';
+                forecastEl[i].children[3].innerHTML = data.daily[i].humidity + ' %';   
+            }
+
         })
     })
 }

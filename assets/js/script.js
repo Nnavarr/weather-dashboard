@@ -34,15 +34,10 @@ var getWeather = function(){
     var state = cityObj[cityName];
     var baseUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName},${state}&appid=${apiKey}&units=imperial`
     
-    // container for lat long coords
-    var lat = 0;
-    var lon = 0;
-
     // current day weather
     fetch(baseUrl).then(function(response){
         response.json().then(function(data) {
             // update html containers to show data
-            console.log(data);
             var date = new Date(data.dt * 1000).toLocaleDateString('en-US');
             cityTitleEl.innerHTML = data.name + ' - ' + date;
             tempEl.innerHTML = 'Temp: ' + data.main.temp;
@@ -69,11 +64,11 @@ var getWeather = function(){
                 searchHistory.push(searchObj);
                 localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
             }
+
+            // 5 day forecast
+            getForecastWeather(lat, lon);
         });
     });
-
-    // 5 day forecast
-    getForecastWeather(lat, lon);
     
 }
 
@@ -82,11 +77,9 @@ var getForecastWeather = function(lat, lon){
     // api call based on user input
     var baseUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`
 
-    console.log(baseUrl);
     // extract forecast data
     fetch(baseUrl).then(function(response){
         response.json().then(function(data) {
-            console.log(data);
             // update HTML elements with forecast info
             for (var i = 0; i < forecastEl.length; i++){
                 // position 0 = next day forecast
@@ -100,8 +93,6 @@ var getForecastWeather = function(lat, lon){
     })
 }
 
-// event listeners
-searchButtonEl.addEventListener('click', getWeather);
 
 // import search history
 var searchHistory = JSON.parse(localStorage.getItem('searchHistory'));
@@ -115,13 +106,25 @@ if (searchHistory){
 }
 
 var uniqueCityArray = Array.from(uniqueCity);
-
 for(i in uniqueCityArray){
-    var searchButton = document.createElement('button');
-    searchButton.className = 'hist-button';
-    searchButton.textContent = uniqueCityArray[i];
+    if (uniqueCityArray[i].length > 1){
+        var searchButton = document.createElement('button');
+        searchButton.className = 'hist-button';
+        searchButton.textContent = uniqueCityArray[i];
 
-    // append historical buttons to search container
-    searchContainerEl.append(searchButton);
+        // append historical buttons to search container
+        searchContainerEl.append(searchButton);
+    }
 }
-    
+
+// event listeners
+searchButtonEl.addEventListener('click', getWeather);
+
+searchContainerEl.addEventListener('click', function(event){
+    var clicked = event.target;
+    if (clicked.className == 'hist-button'){
+        var cityName = document.getElementById('city-search');
+        cityName.value = clicked.textContent;
+        getWeather();
+    }
+})

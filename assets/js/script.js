@@ -32,7 +32,8 @@ var cityObj = {
     'san fransisco': 'california',
     'dallas': 'texas',
     'san jose': 'california',
-    'miami': 'florida'
+    'miami': 'florida',
+    'chicago': 'illinois'
 }
 
 // api call: current weather
@@ -92,7 +93,7 @@ var getForecastWeather = function(lat, lon){
             mainImgEl.src = `http://openweathermap.org/img/w/${data.current.weather[0].icon}.png`
             tempEl.innerHTML = 'Temp : ' + data.current.temp;
             windEl.innerHTML = 'Wind: ' + data.current.wind_speed + ' MPH';
-            humidityEl.innerHTML = 'Humidity ' + data.current.humidity;
+            humidityEl.innerHTML = 'Humidity ' + data.current.humidity + ' %';
 
             // uv index logic
             var uvi = data.current.uvi;

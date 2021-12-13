@@ -1,5 +1,6 @@
 // establish global variables
 var searchButtonEl = document.getElementById('search-btn');
+var searchContainerEl = document.getElementById('search-container');
 var tempEl = document.getElementById('temp');
 var windEl = document.getElementById('wind');
 var humidityEl = document.getElementById('humidity');
@@ -54,11 +55,10 @@ var getWeather = function(){
 
             // update search history 
             var searchObj = {
-                [cityName]: {
+                    'city': cityName,
                     'lon': lon,
                     'lat': lat
                 }
-            }
 
             // check for presence of previous searches. If none, create object.
             if (!searchHistory){
@@ -105,3 +105,23 @@ searchButtonEl.addEventListener('click', getWeather);
 
 // import search history
 var searchHistory = JSON.parse(localStorage.getItem('searchHistory'));
+
+// create set to capture unique keys from searchHistory object
+var uniqueCity = new Set();
+if (searchHistory){
+    for (var i = 0; i < searchHistory.length; i ++){
+        uniqueCity.add(searchHistory[i].city);
+    }
+}
+
+var uniqueCityArray = Array.from(uniqueCity);
+
+for(i in uniqueCityArray){
+    var searchButton = document.createElement('button');
+    searchButton.className = 'hist-button';
+    searchButton.textContent = uniqueCityArray[i];
+
+    // append historical buttons to search container
+    searchContainerEl.append(searchButton);
+}
+    

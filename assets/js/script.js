@@ -4,8 +4,10 @@ var searchContainerEl = document.getElementById('search-container');
 var tempEl = document.getElementById('temp');
 var windEl = document.getElementById('wind');
 var humidityEl = document.getElementById('humidity');
-var uvEl = document.getElementById('uvi');
+var uvEl = document.getElementById('uvi-main');
 var cityTitleEl = document.getElementById('city');
+var mainImgEl = document.getElementById('main-img');
+var forecastTitleEl = document.getElementById('forecast-title');
 
 // forecast elements
 var day1El = document.getElementById('day1');
@@ -22,7 +24,15 @@ var cityObj = {
     'los angeles': 'california', 
     'las vegas': 'nevada',
     'austin': 'texas',
-    'houston': 'texas'
+    'houston': 'texas',
+    'new york': 'new york',
+    'philadelphia': 'pennsylvania',
+    'san antonio': 'texas',
+    'san diego': 'california',
+    'san fransisco': 'california',
+    'dallas': 'texas',
+    'san jose': 'california',
+    'miami': 'florida'
 }
 
 // api call: current weather
@@ -37,13 +47,7 @@ var getWeather = function(){
     // current day weather
     fetch(baseUrl).then(function(response){
         response.json().then(function(data) {
-            // update html containers to show data
-            var date = new Date(data.dt * 1000).toLocaleDateString('en-US');
-            cityTitleEl.innerHTML = data.name + ' - ' + date;
-            tempEl.innerHTML = 'Temp: ' + data.main.temp;
-            windEl.innerHTML = 'Wind: ' + data.wind.speed + ' MPH';
-            humidityEl.innerHTML = 'Humidity: ' + data.main.humidity + ' %';
-
+            console.log(data);
             // set lat/long coordinates for forecast API
             lat = data.coord.lat;
             lon = data.coord.lon;
@@ -65,7 +69,11 @@ var getWeather = function(){
                 localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
             }
 
-            // 5 day forecast
+            // update html containers to show data
+            var date = new Date(data.dt * 1000).toLocaleDateString('en-US');
+            cityTitleEl.innerHTML = data.name + ' (Current) - ' + date;
+  
+            // current & 5 day forecast
             getForecastWeather(lat, lon);
         });
     });
@@ -80,7 +88,27 @@ var getForecastWeather = function(lat, lon){
     // extract forecast data
     fetch(baseUrl).then(function(response){
         response.json().then(function(data) {
-            // update HTML elements with forecast info
+            // update HTML elements for current day into
+            mainImgEl.src = `http://openweathermap.org/img/w/${data.current.weather[0].icon}.png`
+            tempEl.innerHTML = 'Temp : ' + data.current.temp;
+            windEl.innerHTML = 'Wind: ' + data.current.wind_speed + ' MPH';
+            humidityEl.innerHTML = 'Humidity ' + data.current.humidity;
+
+            // uv index logic
+            var uvi = data.current.uvi;
+            uvEl.innerHTML = 'UVI: ' + data.current.uvi;
+            if (uvi <= 2.99){
+                uvEl.style.backgroundColor = 'green';
+                uvEl.style.color = 'white';
+            } else if ((uvi >= 3) && (uvi <=5)){
+                uvEl.style.backgroundColor = 'yellow';
+            } else {
+                uvEl.style.backgroundColor = 'red';
+                uvEl.style.color = 'white';
+            }
+
+            // update HTML elements for forecast info
+            forecastTitleEl.innerHTML = '5 Day Forecast'
             for (var i = 0; i < forecastEl.length; i++){
                 // position 0 = next day forecast
                 forecastEl[i].children[0].innerHTML = new Date(data.daily[i].dt * 1000).toLocaleDateString('en-US'); // date
@@ -97,10 +125,12 @@ var getForecastWeather = function(lat, lon){
                     forecastEl[i].children[5].style.color = 'white';
                 } else if ((uvi >= 3) && (uvi <=5)){
                     forecastEl[i].children[5].style.backgroundColor = 'yellow';
+                    forecastEl[i].children[5].style.color = 'black';
                 } else {
                     forecastEl[i].children[5].style.backgroundColor = 'red';
                     forecastEl[i].children[5].style.color = 'white';
                 }
+
             }
         })
     })

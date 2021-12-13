@@ -27,6 +27,13 @@ main {
 
 .side #search-btn {
     margin: 10px 0px;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+.side #search-btn:hover {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
 }
 
 .side .hist-button {

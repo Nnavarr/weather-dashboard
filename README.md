@@ -2,7 +2,7 @@
 # Weather Dashboard
 
 ## Description
-This repository contains the code that generates the weahter dashboard. After entering a desired major city, the user can see the current weather conditions and the 5 day forecast. Additionally, the depdning on the UV index range, the background will change color accordingly; Green = low, yellow = mild, red = high. 
+This repository contains the code that generates the weahter dashboard. After entering a desired major city, the user can see the current weather conditions and the 5 day forecast. Additionally, depdning on the UV index range, the background will change color accordingly; Green = low, yellow = mild, red = high. 
 
 
 ## App

@@ -4,7 +4,7 @@ var searchContainerEl = document.getElementById('search-container');
 var tempEl = document.getElementById('temp');
 var windEl = document.getElementById('wind');
 var humidityEl = document.getElementById('humidity');
-var uvEl = document.getElementById('uv');
+var uvEl = document.getElementById('uvi');
 var cityTitleEl = document.getElementById('city');
 
 // forecast elements
@@ -88,11 +88,23 @@ var getForecastWeather = function(lat, lon){
                 forecastEl[i].children[2].innerHTML = 'Day: ' + data.daily[i].temp.day;
                 forecastEl[i].children[3].innerHTML = 'Wind: ' + data.daily[i].wind_speed + ' MPH';
                 forecastEl[i].children[4].innerHTML = 'Humidity: ' + data.daily[i].humidity + ' %';   
+
+                // uv index logic
+                var uvi = parseFloat(data.daily[i].uvi);
+                forecastEl[i].children[5].innerHTML = 'UVI: ' + uvi.toString();
+                if (uvi <= 2.99){
+                    forecastEl[i].children[5].style.backgroundColor = 'green';
+                    forecastEl[i].children[5].style.color = 'white';
+                } else if ((uvi >= 3) && (uvi <=5)){
+                    forecastEl[i].children[5].style.backgroundColor = 'yellow';
+                } else {
+                    forecastEl[i].children[5].style.backgroundColor = 'red';
+                    forecastEl[i].children[5].style.color = 'white';
+                }
             }
         })
     })
 }
-
 
 // import search history
 var searchHistory = JSON.parse(localStorage.getItem('searchHistory'));
